@@ -14,7 +14,7 @@ class Run(object):
         self.worker = self.worker + num
 
     def send_message(self):
-        return self.runId + '!' +self.min_budget + '!' + self.max_bugdet + '!' + self.worker + '\n'
+        return self.runId + '!' +self.min_budget + '!' + self.max_bugdet + '!' + str(self.worker) + '\n'
 
 
 class Monitor(object):
@@ -41,7 +41,7 @@ class Monitor(object):
             if len(data) != 5:
                 break
             if data[0] == 'create':
-                new_run = Run(runID=data[1], min_budget=data[2], max_budget=data[3], worker=data[4])
+                new_run = Run(runID=data[1], min_budget=data[2], max_budget=data[3], worker=int(data[4]))
                 self.run_dict[data[1]] = new_run
             elif data[0] == 'addworker':
                 self.run_dict[data[1]].add_worker(num=int(data[4]))

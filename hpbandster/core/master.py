@@ -126,6 +126,9 @@ class Master(object):
 					}
 
 		#something new. monitor stuff
+		self.run_id = run_id
+		self.monitor = monitor
+		self.monitor_port = monitor_port
 		client_socket = socket.socket()  # instantiate
 		client_socket.connect((monitor, monitor_port))  # connect to the monitor
 		message = 'create!' + str(run_id) + '!' + str(min_budget) + '!' + str(max_budget) + '!0'
@@ -134,7 +137,7 @@ class Master(object):
 		#end
 
 
-		self.dispatcher = Dispatcher( self.job_callback, queue_callback=self.adjust_queue_size, run_id=run_id, ping_interval=ping_interval, nameserver=nameserver, nameserver_port=nameserver_port, host=host)
+		self.dispatcher = Dispatcher( self.job_callback, queue_callback=self.adjust_queue_size, run_id=run_id, ping_interval=ping_interval, nameserver=nameserver, nameserver_port=nameserver_port, host=host, monitor=monitor, monitor_port=monitor_port)
 
 		self.dispatcher_thread = threading.Thread(target=self.dispatcher.run)
 		self.dispatcher_thread.start()
@@ -144,6 +147,15 @@ class Master(object):
 		self.logger.debug('HBMASTER: shutdown initiated, shutdown_workers = %s'%(str(shutdown_workers)))
 		self.dispatcher.shutdown(shutdown_workers)
 		self.dispatcher_thread.join()
+
+		# something new. monitor stuff
+		client_socket = socket.socket()  # instantiate
+		client_socket.connect((self.monitor, self.monitor_port))  # connect to the monitor
+		message = 'remove!' + str(self.run_id) + '!0!0!0'
+		client_socket.send(message.encode())
+		client_socket.close()
+
+	# end
 
 
 	def wait_for_workers(self, min_n_workers=1):
