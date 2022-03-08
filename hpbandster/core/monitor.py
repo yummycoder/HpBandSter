@@ -21,7 +21,7 @@ class Monitor(object):
 
 
     def __init__(self):
-        self.run_dic = {}
+        self.run_dict = {}
         return
 
     def start(self, host='0.0.0.0', port=8080):
@@ -47,7 +47,8 @@ class Monitor(object):
                 self.run_dict[data[1]].add_worker(num=int(data[4]))
             elif data[0] == 'show':
                 for key in self.run_dict:
-                    conn.send(self.run_dict[key].send_message())
+                    print(self.run_dict[key].send_message())
+                    conn.send(self.run_dict[key].send_message().encode())
             elif data[0] == 'remove':
                 del self.run_dict[data[1]]
 

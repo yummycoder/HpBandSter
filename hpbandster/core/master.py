@@ -125,17 +125,19 @@ class Master(object):
 						'time_ref'   : self.time_ref
 					}
 
-		self.dispatcher = Dispatcher( self.job_callback, queue_callback=self.adjust_queue_size, run_id=run_id, ping_interval=ping_interval, nameserver=nameserver, nameserver_port=nameserver_port, host=host)
-
-		self.dispatcher_thread = threading.Thread(target=self.dispatcher.run)
-		self.dispatcher_thread.start()
-
 		#something new. monitor stuff
 		client_socket = socket.socket()  # instantiate
 		client_socket.connect((monitor, monitor_port))  # connect to the monitor
 		message = 'create!' + str(run_id) + '!' + str(min_budget) + '!' + str(max_budget) + '!0'
 		client_socket.send(message.encode())
 		client_socket.close()
+		#end
+
+
+		self.dispatcher = Dispatcher( self.job_callback, queue_callback=self.adjust_queue_size, run_id=run_id, ping_interval=ping_interval, nameserver=nameserver, nameserver_port=nameserver_port, host=host)
+
+		self.dispatcher_thread = threading.Thread(target=self.dispatcher.run)
+		self.dispatcher_thread.start()
 
 
 	def shutdown(self, shutdown_workers=False):
