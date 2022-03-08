@@ -91,7 +91,7 @@ class BOHB(Master):
 					min_bandwidth = min_bandwidth
 					)
 
-		super().__init__(config_generator=cg, **kwargs)
+		super().__init__(config_generator=cg, min_budget=min_budget, max_budget=max_budget, **kwargs)
 
 		# Hyperband related stuff
 		self.eta = eta
