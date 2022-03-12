@@ -127,13 +127,10 @@ class Monitor(object):
             if self.run_dict[key].worker < 8:
                 new_worker = (2 * self.run_dict[key].worker) - self.run_dict[key].worker
                 self.run_dict[key].check_time = curr_time
-                print(new_worker)
             else:
                 run_time = curr_time - self.run_dict[key].start_time
                 new_worker = (8 + int(math.log(run_time, 10))) - self.run_dict[key].worker
                 self.run_dict[key].check_time = curr_time
-            print(self.run_dict[key].worker)
-            print(new_worker)
             i = 0
             while i < new_worker:
                 self.server_list.sort(reverse=True)
@@ -181,8 +178,10 @@ class Monitor(object):
             elif data[0] == 'addworker':
                 self.run_dict[data[1]].add_worker(num=int(data[4]))
             elif data[0] == 'show':
+                curr_time = time.time()
                 for key in self.run_dict:
-                    print(self.run_dict[key].send_message())
+                    run_time = curr_time - self.run_dict[key].start_time
+                    print(key + " run time :" + str(run_time) + " number of worker: " + str(self.run_dict[key].worker))
                     conn.send(self.run_dict[key].send_message().encode())
             elif data[0] == 'remove':
                 curr_time = time.time()
