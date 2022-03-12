@@ -131,7 +131,7 @@ class Master(object):
 		self.monitor_port = monitor_port
 		client_socket = socket.socket()  # instantiate
 		client_socket.connect((monitor, monitor_port))  # connect to the monitor
-		message = 'create!' + str(run_id) + '!' + str(min_budget) + '!' + str(max_budget) + '!0'
+		message = 'create!' + str(run_id) + '!' + str(min_budget) + '!' + str(max_budget) + '!0!' + nameserver + '!' + str(nameserver_port)
 		client_socket.send(message.encode())
 		client_socket.close()
 		#end
